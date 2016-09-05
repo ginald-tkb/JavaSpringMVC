@@ -1,11 +1,12 @@
 <!DOCTYPE HTML>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <title>Login</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
     <form action="/login" method="POST">
+        <p th:text="${errorMessage!=null?errorMessage:''}"></p>
         <input type="text" id="username" name="username"/>
         <input type="password" id="password" name="password"/>
         <input type="submit" value="Login"/>

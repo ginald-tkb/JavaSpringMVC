@@ -5,6 +5,27 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-<p th:text="'Successfully logged in, ' + ${username} + '!'" />
+<p th:text="'Successfully logged in, ' + ${token} + '!'" />
+
+<table>
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Start date</th>
+        <th>End date</th>
+        <!--<th>Is Active</th>-->
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="project : ${projects}">
+        <td th:text="${project.title}"></td>
+        <td th:text="${project.description}"></td>
+        <td th:text="${project.start_date}"></td>
+        <td th:text="${project.end_date}"></td>
+        <!--<td th:text="${project.is_active == True ? 'Yes':'No'}"></td>-->
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>

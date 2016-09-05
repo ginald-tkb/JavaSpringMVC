@@ -6,6 +6,8 @@ import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 
 import com.javaspringmvc.Application;
 import org.junit.Test;
@@ -13,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -27,13 +30,21 @@ public class MainControllerTest {
     @Test
     public void indexPage() throws Exception {
         mockMvc.perform(get("/index.html"))
-                .andExpect(content().string(containsString("<form action=\"/login\" method=\"POST\">")));
+                .andExpect(content().string(containsString(" action=\"/login\" method=\"POST\"")));
     }
 
-    //@Test
+    @Test
+    public void login() throws Exception {
+        mockMvc.perform((post("/login").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("username", "tshiamo"))
+                .param("password","pass123"))
+                .andExpect(redirectedUrl("Home"));
+    }
+
+    @Test
     public void homePage() throws Exception {
-        mockMvc.perform((post("/login").param("username", "tshiamo")).param("password","pass123"))
+        mockMvc.perform((get("/Home")
+                .sessionAttr("username", "tshiamo")))
                 .andExpect(content().string(containsString("Successfully logged in, tshiamo!")));
     }
-
 }
