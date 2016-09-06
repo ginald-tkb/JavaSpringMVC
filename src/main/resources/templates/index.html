@@ -3,13 +3,18 @@
 <head>
     <title>Login</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" href="index.css"/>
 </head>
 <body>
+<div class="login-page">
+<div class="form">
     <form action="/login" method="POST">
-        <p th:text="${errorMessage!=null?errorMessage:''}"></p>
+        <p id="error" th:text="${errorMessage!=null?errorMessage:''}"></p>
         <input type="text" id="username" name="username"/>
         <input type="password" id="password" name="password"/>
-        <input type="submit" value="Login"/>
+        <button type="submit">Login</button>
     </form>
+</div>
+</div>
 </body>
 </html>

@@ -84,7 +84,7 @@ public class MainController {
             System.out.println(response.getBody());
             Project[] projects = mapper.readValue(response.getBody(), Project[].class);
             httpServletRequest.getSession().setAttribute("projects", projects);
-            model.addAttribute("token", httpServletRequest.getSession().getAttribute("token"));
+//            model.addAttribute("token", httpServletRequest.getSession().getAttribute("token"));
             model.addAttribute("projects", projects);
         }
         catch (HttpClientErrorException e)

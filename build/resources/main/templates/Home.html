@@ -3,29 +3,84 @@
 <head>
     <title>Home</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" href="homeStyles.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </head>
 <body>
-<p th:text="'Successfully logged in, ' + ${token} + '!'" />
+<!--<p th:text="'Successfully logged in, ' + ${token} + '!'" />-->
 
-<table>
+<table class="responstable">
     <thead>
     <tr>
         <th>Title</th>
         <th>Description</th>
         <th>Start date</th>
         <th>End date</th>
+        <th>Task Set</th>
         <!--<th>Is Active</th>-->
     </tr>
     </thead>
     <tbody>
-    <tr th:each="project : ${projects}">
+    <tr onclick="viewTask(this)" th:each="project : ${projects}">
         <td th:text="${project.title}"></td>
-        <td th:text="${project.description}"></td>
+        <td th:text="${project.description}"><em>('auto' or px amount)</em></td>
         <td th:text="${project.start_date}"></td>
         <td th:text="${project.end_date}"></td>
+        <td><button class="myBtn" id="myBtn" >View TaskSet</button></td>
         <!--<td th:text="${project.is_active == True ? 'Yes':'No'}"></td>-->
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span onclick="closeDialog(this)" class="close"> X </span>
+                <div th:if="${project.task_set != null}">
+                    <h2 th:text="${project.title}"></h2>
+                    <p id="error" th:text="${project.task_set.size()==0 ? 'There are currently no Tasks for this project':''}"></p>
+                    <ul>
+                        <th:block th:each="task : ${project.task_set}">
+                            <li th:text="${task.title}"></li>
+                        </th:block>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
     </tr>
     </tbody>
 </table>
+
+
+
+<script>
+        // Get the modal
+        var modal = null;
+        var modalList = document.getElementsByClassName("modal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementsByClassName("myBtn")[0];
+
+        // Get the span element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal
+        function viewTask(elem) {
+            modal = modalList[$(elem).index()];
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on span (x), close the modal
+
+        function closeDialog(elem) {
+            modal.style.display = "none";
+        }
+
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+</script>
 </body>
 </html>
