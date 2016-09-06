@@ -29,22 +29,31 @@ public class MainControllerTest {
 
     @Test
     public void indexPage() throws Exception {
-        mockMvc.perform(get("/index.html"))
+        mockMvc.perform(get("/"))
                 .andExpect(content().string(containsString(" action=\"/login\" method=\"POST\"")));
     }
 
     @Test
     public void login() throws Exception {
         mockMvc.perform((post("/login").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("username", "tshiamo"))
-                .param("password","pass123"))
+                .param("username", "admin"))
+                .param("password","admin"))
                 .andExpect(redirectedUrl("Home"));
     }
 
     @Test
     public void homePage() throws Exception {
         mockMvc.perform((get("/Home")
-                .sessionAttr("username", "tshiamo")))
-                .andExpect(content().string(containsString("Successfully logged in, tshiamo!")));
+                .sessionAttr("token", "71456dbd15de0c0b6d2b4b44e5a92ad94c6def97")))
+                .andExpect(content().string(containsString("<th>Title</th>\n" +
+                        "        <th>Description</th>\n" +
+                        "        <th>Start date</th>\n" +
+                        "        <th>End date</th>")));
+    }
+
+    @Test
+    public void testNotLoggedIn() throws Exception {
+        mockMvc.perform(get("/Home"))
+                .andExpect(content().string(containsString(" action=\"/login\" method=\"POST\"")));
     }
 }

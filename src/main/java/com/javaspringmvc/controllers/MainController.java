@@ -71,6 +71,9 @@ public class MainController {
     public String home(ModelMap model) {
         try {
 
+            if(httpServletRequest.getSession().getAttribute("token")==null)
+                return "index";
+
             HttpHeaders headers = new HttpHeaders();
             headers.set("Content-Type", "application/json");
             headers.set("Authorization","Token " + httpServletRequest.getSession().getAttribute("token").toString());
