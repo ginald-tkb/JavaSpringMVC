@@ -52,6 +52,13 @@ public class MainControllerTest {
     }
 
     @Test
+    public void homePageAddProject() throws Exception {
+        mockMvc.perform((get("/Home")
+                .sessionAttr("token", "71456dbd15de0c0b6d2b4b44e5a92ad94c6def97")))
+                .andExpect(content().string(containsString("<form action=\"/addPoject\" method=\"POST\">")));
+    }
+
+    @Test
     public void testNotLoggedIn() throws Exception {
         mockMvc.perform(get("/Home"))
                 .andExpect(content().string(containsString(" action=\"/login\" method=\"POST\"")));

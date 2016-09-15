@@ -58,11 +58,34 @@ public class MainController {
             Token token = restTemplate.postForObject("http://userservice.staging.tangentmicroservices.com/api-token-auth/",
                     authCredentials, Token.class);
             httpServletRequest.getSession().setAttribute("token", token.getToken());
+            httpServletRequest.getSession().setAttribute("successMessageLogin", "Successfully logged in!!!");
         }
         catch (HttpClientErrorException e)
         {
             model.addAttribute("errorMessage", "Failed to login");
             return "index";
+        }
+        return  "redirect:Home";
+    }
+
+    @RequestMapping(value = "/addPoject", method = POST)
+    public String addProject(@ModelAttribute Project project, Model model) {
+        try {
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Content-Type", "application/json");
+            headers.set("Authorization","Token " + httpServletRequest.getSession().getAttribute("token").toString());
+
+            HttpEntity<Project> entity = new HttpEntity<Project>(project, headers);
+
+            project = restTemplate.postForObject("http://projectservice.staging.tangentmicroservices.com:80/api/v1/projects/",
+                    entity, Project.class);
+            httpServletRequest.getSession().setAttribute("successMessageProjectAdded", "Project successfully added");
+        }
+        catch (HttpClientErrorException e)
+        {
+            model.addAttribute("errorMessage", e.getLocalizedMessage());
+            return "Home";
         }
         return  "redirect:Home";
     }
@@ -73,6 +96,10 @@ public class MainController {
 
             if(httpServletRequest.getSession().getAttribute("token")==null)
                 return "index";
+
+            if(httpServletRequest.getSession().getAttribute("successMessageProjectAdded")!=null)
+                model.addAttribute("successMessageProjectAdded", httpServletRequest.getSession().getAttribute("successMessageProjectAdded"));
+            httpServletRequest.getSession().setAttribute("successMessageProjectAdded", null);
 
             HttpHeaders headers = new HttpHeaders();
             headers.set("Content-Type", "application/json");
@@ -85,9 +112,16 @@ public class MainController {
                     "http://projectservice.staging.tangentmicroservices.com:80/api/v1/projects/", HttpMethod.GET, entity, String.class, String.class);
             ObjectMapper mapper = new ObjectMapper();
             System.out.println(response.getBody());
+            System.out.println(response.getBody());
             Project[] projects = mapper.readValue(response.getBody(), Project[].class);
             httpServletRequest.getSession().setAttribute("projects", projects);
-//            model.addAttribute("token", httpServletRequest.getSession().getAttribute("token"));
+
+
+
+            if(httpServletRequest.getSession().getAttribute("successMessageLogin") != null)
+                model.addAttribute("successMessageLogin", httpServletRequest.getSession().getAttribute("successMessageLogin"));
+            httpServletRequest.getSession().setAttribute("successMessageLogin", null);
+
             model.addAttribute("projects", projects);
         }
         catch (HttpClientErrorException e)
